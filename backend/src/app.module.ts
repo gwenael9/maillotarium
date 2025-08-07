@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClubModule } from './club/club.module';
+import { MaillotModule } from './maillot/maillot.module';
+import { SaisonModule } from './saison/saison.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { ClubModule } from './club/club.module';
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     ClubModule,
+    SaisonModule,
+    MaillotModule,
   ],
 })
 export class AppModule {}

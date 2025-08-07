@@ -36,4 +36,4 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: npx ts-node-dev --respawn --transpile-only src/main.ts
+    command: npm run dev

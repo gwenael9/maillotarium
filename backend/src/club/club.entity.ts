@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { MaillotEntity } from '@/maillot/maillot.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('club')
 export class ClubEntity {
@@ -13,4 +14,7 @@ export class ClubEntity {
 
   @Column({ nullable: true })
   ligue: string;
+
+  @OneToMany(() => MaillotEntity, (maillot) => maillot.club)
+  maillots: MaillotEntity[];
 }
