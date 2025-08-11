@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
+import { LigueType } from '../club.entity';
 
 @Exclude()
 export class ClubResponseDto {
   @Expose()
   @Type(() => String)
   @ApiProperty({
-    description: 'id du banc',
+    description: 'id du club',
     type: String,
   })
   id: string;
@@ -29,14 +30,14 @@ export class ClubResponseDto {
   })
   pays: string;
 
-  // @Expose()
-  // @ApiProperty({
-  //   description: 'ligue du club',
-  //   example: LigueType.angleterre,
-  //   enum: LigueType,
-  //   enumName: 'LigueType',
-  // })
-  // ligue: LigueType;
+  @Expose()
+  @ApiProperty({
+    description: 'ligue du club',
+    example: LigueType.angleterre,
+    enum: LigueType,
+    enumName: 'LigueType',
+  })
+  ligue: LigueType;
 }
 
 export class PaginatedClubResponseDto {

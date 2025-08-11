@@ -1,6 +1,12 @@
 import { ClubEntity } from '@/club/club.entity';
 import { SaisonEntity } from '@/saison/saison.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export const TypeMaillot = {
   HOME: 'domicile',
@@ -15,11 +21,25 @@ export class MaillotEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => ClubEntity, { onDelete: 'CASCADE' })
-  club: ClubEntity;
+  @ManyToOne(() => ClubEntity, (club) => club.maillots, {
+    onDelete: 'CASCADE',
+    cascade: true,
+  })
+  @JoinColumn({ name: 'clubId' })
+  club?: ClubEntity;
 
-  @ManyToOne(() => SaisonEntity, { onDelete: 'CASCADE' })
-  saison: SaisonEntity;
+  @Column({ nullable: true })
+  clubId: string;
+
+  @ManyToOne(() => SaisonEntity, (saison) => saison.maillots, {
+    onDelete: 'CASCADE',
+    cascade: true,
+  })
+  @JoinColumn({ name: 'saisonId' })
+  saison?: SaisonEntity;
+
+  @Column({ nullable: true })
+  saisonId: string;
 
   @Column({
     type: 'enum',
