@@ -22,9 +22,37 @@ services:
       db:
         condition: service_healthy
 
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    entrypoint: >
+      /bin/sh -c "
+        minio server /data --console-address ':9001' &
+        sleep 10
+        mc alias set myminio http://localhost:9000 ${S3_ACCESS_KEY} ${S3_SECRET_KEY}
+        mc mb --ignore-existing myminio/${S3_BUCKET}
+        mc anonymous set public myminio/${S3_BUCKET}
+        wait
+      "
+
   backend:
     depends_on:
       db:
+        condition: service_healthy
+      minio:
         condition: service_healthy
     build: backend
     ports:
@@ -35,5 +63,7 @@ services:
       - DB_HOST=${DB_HOST}
     volumes:
       - ./backend:/app
-      - /app/node_modules
     command: npm run dev
+
+volumes:
+  minio_data:

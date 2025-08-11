@@ -1,0 +1,16 @@
+{
+  "name": "maillotarium",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gwenael9/maillotarium.git"
+  },
+  "license": "ISC",
+  "author": "Gwenaël Guého",
+  "type": "commonjs",
+  "main": "/",
+  "scripts": {
+    "dev": "docker compose up --build"
+  }
+}
