@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -21,15 +21,15 @@ export class MaillotController {
   async findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
-    @Query('club') club,
-    @Query('saison') saison,
+    @Query('clubId') clubId,
+    @Query('saisonId') saisonId,
     @Query('marque') marque,
   ): Promise<PaginatedMaillotResponseDto> {
     const { data, total } = await this.maillotService.findAll({
       skip: (page - 1) * limit,
       take: limit,
-      clubId: club,
-      saisonId: saison,
+      clubId,
+      saisonId,
       marque,
     });
 
@@ -39,5 +39,16 @@ export class MaillotController {
       }),
       total,
     };
+  }
+
+  @Get('club/:clubId/saison/:saisonId')
+  async findThreeBySaisonAndClub(
+    @Param('clubId') clubId: string,
+    @Param('saisonId') saisonId: string,
+  ): Promise<MaillotResponseDto[]> {
+    const { data } = await this.maillotService.findAll({ clubId, saisonId });
+    return plainToInstance(MaillotResponseDto, data, {
+      excludeExtraneousValues: true,
+    });
   }
 }

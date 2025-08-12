@@ -34,4 +34,15 @@ export class ClubController {
       total,
     };
   }
+
+  @Get('country')
+  @ApiOperation({ summary: 'Get all country' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns a string array of all country in db',
+  })
+  async findAllCountry(): Promise<{ country: string[] }> {
+    const country = await this.clubService.findAllCountry();
+    return { country: country };
+  }
 }

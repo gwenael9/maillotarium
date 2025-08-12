@@ -25,4 +25,7 @@ export class ClubEntity {
 
   @OneToMany(() => MaillotEntity, (maillot) => maillot.club)
   maillots: MaillotEntity[];
+
+  @Column({ nullable: true })
+  logo_url: string;
 }

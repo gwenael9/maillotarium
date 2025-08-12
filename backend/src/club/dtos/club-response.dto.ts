@@ -38,6 +38,14 @@ export class ClubResponseDto {
     enumName: 'LigueType',
   })
   ligue: LigueType;
+
+  @Expose()
+  @Type(() => String)
+  @ApiProperty({
+    description: 'logo du club',
+    type: String,
+  })
+  logo_url: string;
 }
 
 export class PaginatedClubResponseDto {

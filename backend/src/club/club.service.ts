@@ -27,11 +27,22 @@ export class ClubService {
   }
 
   async findOne(id: string): Promise<ClubEntity> {
-    const banc = await this.clubRepository.findOne({
+    const club = await this.clubRepository.findOne({
       where: { id },
     });
 
-    if (!banc) throw new NotFoundException('Club inconnu.');
-    return banc;
+    if (!club) throw new NotFoundException('Club inconnu.');
+    return club;
+  }
+
+  async findAllCountry(): Promise<string[]> {
+    const result: ClubEntity[] = await this.clubRepository
+      .createQueryBuilder('club')
+      .select('DISTINCT club.pays', 'pays')
+      .getRawMany();
+
+    return result
+      .map((row) => row.pays.trim().toLowerCase())
+      .filter((pays) => pays.length > 0);
   }
 }
