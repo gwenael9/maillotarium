@@ -9,9 +9,9 @@ import {
 } from 'typeorm';
 
 export const TypeMaillot = {
-  HOME: 'domicile',
-  AWAY: 'extérieur',
-  THIRD: 'troisième',
+  HOME: 'home',
+  AWAY: 'away',
+  THIRD: 'third',
 } as const;
 
 export type TypeMaillot = keyof typeof TypeMaillot;
@@ -50,6 +50,9 @@ export class MaillotEntity {
 
   @Column()
   image_url: string;
+
+  @Column({ nullable: true })
+  description: string;
 
   @Column()
   marque: string;

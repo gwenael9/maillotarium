@@ -43,6 +43,6 @@ export class ClubController {
   })
   async findAllCountry(): Promise<{ country: string[] }> {
     const country = await this.clubService.findAllCountry();
-    return { country: country };
+    return { country };
   }
 }

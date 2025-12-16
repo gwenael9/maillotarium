@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { LigueType } from '../club.entity';
 
 @Exclude()
 export class ClubResponseDto {
@@ -29,15 +28,6 @@ export class ClubResponseDto {
     type: String,
   })
   pays: string;
-
-  @Expose()
-  @ApiProperty({
-    description: 'ligue du club',
-    example: LigueType.angleterre,
-    enum: LigueType,
-    enumName: 'LigueType',
-  })
-  ligue: LigueType;
 
   @Expose()
   @Type(() => String)

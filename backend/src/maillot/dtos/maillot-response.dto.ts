@@ -48,6 +48,14 @@ export class MaillotResponseDto {
   @Expose()
   @Type(() => String)
   @ApiProperty({
+    description: 'description du maillot',
+    type: String,
+  })
+  description: string;
+
+  @Expose()
+  @Type(() => String)
+  @ApiProperty({
     description: 'marque du maillot',
     type: String,
   })
