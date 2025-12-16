@@ -7,10 +7,10 @@ export class ClubEntity {
   id: string;
 
   @Column()
-  nom: string;
+  name: string;
 
   @Column({ nullable: true })
-  pays: string;
+  country: string;
 
   @OneToMany(() => MaillotEntity, (maillot) => maillot.club)
   maillots: MaillotEntity[];

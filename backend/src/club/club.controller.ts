@@ -1,4 +1,14 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { ClubService } from './club.service';
@@ -6,6 +16,8 @@ import {
   ClubResponseDto,
   PaginatedClubResponseDto,
 } from './dtos/club-response.dto';
+import { ClubCreateDto } from './dtos/club-input.dto';
+import { MessageResponse } from '@/common/types/message';
 
 @Controller('club')
 export class ClubController {
@@ -35,6 +47,16 @@ export class ClubController {
     };
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get one club' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns one club',
+  })
+  async findOne(@Param('id') id: string): Promise<ClubResponseDto> {
+    return await this.clubService.findOne(id);
+  }
+
   @Get('country')
   @ApiOperation({ summary: 'Get all country' })
   @ApiResponse({
@@ -44,5 +66,44 @@ export class ClubController {
   async findAllCountry(): Promise<{ country: string[] }> {
     const country = await this.clubService.findAllCountry();
     return { country };
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new club' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The club has been successfully created.',
+    type: ClubResponseDto,
+  })
+  async create(@Body() createClubDto: ClubCreateDto): Promise<MessageResponse> {
+    const newClub = await this.clubService.create(createClubDto);
+    return { message: `Le club ${newClub.name} a bien été créé.` };
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update a club' })
+  @ApiResponse({
+    description: 'The club has been successfully updated.',
+    type: ClubResponseDto,
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() updateClubDto: Partial<ClubCreateDto>,
+  ): Promise<ClubResponseDto> {
+    const updatedClub = await this.clubService.update(id, updateClubDto);
+    return plainToInstance(ClubResponseDto, updatedClub, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a club' })
+  @ApiResponse({
+    description: 'The club has been successfully deleted.',
+    type: ClubResponseDto,
+  })
+  async delete(@Param('id') id: string): Promise<MessageResponse> {
+    const clubToDelete = await this.clubService.remove(id);
+    return { message: `Le club ${clubToDelete.name} a bien été supprimé.` };
   }
 }

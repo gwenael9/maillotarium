@@ -18,7 +18,7 @@ export class ClubResponseDto {
     example: 'Arsenal',
     type: String,
   })
-  nom: string;
+  name: string;
 
   @Expose()
   @Type(() => String)
@@ -27,7 +27,7 @@ export class ClubResponseDto {
     example: 'Angleterre',
     type: String,
   })
-  pays: string;
+  country: string;
 
   @Expose()
   @Type(() => String)
