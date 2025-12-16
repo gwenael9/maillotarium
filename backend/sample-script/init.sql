@@ -9,13 +9,14 @@ INSERT INTO saison ("anneeDebut", "anneeFin") VALUES (2025, 2026);
 
 -- Créer un club
 INSERT INTO club (nom, pays, ligue)
-VALUES ('Paris Saint-Germain', 'France', 'Ligue 1');
+VALUES ('Arsenal', 'Angleterre', 'Premiere League');
 
 -- Créer un maillot
+-- Ajouter le maillot dans le s3 manuellement
 INSERT INTO maillot ("clubId", "saisonId", type_maillot, image_url, marque, palette_couleur)
 VALUES (
-  '4542b975-616f-411f-a70c-77bd7f1f981e',
-  1, 
+  (SELECT id FROM club WHERE nom = 'Arsenal' LIMIT 1),
+  (SELECT id FROM saison WHERE "anneeDebut" = 2025 LIMIT 1),
   'domicile', 
   'http://localhost:9000/maillotariums3/angleterre/arsenal/2526/home.png', 
   'Adidas', 
