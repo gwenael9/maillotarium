@@ -10,8 +10,7 @@ import { ClubEntity } from './club.entity';
 import { ClubCreateDto } from './dtos/club-input.dto';
 
 export interface ClubFIndAllOptions extends FindManyOptions<ClubEntity> {
-  skip?: number;
-  take?: number;
+  country_code?: string;
 }
 
 @Injectable()
@@ -27,6 +26,9 @@ export class ClubService {
     const [data, total] = await this.clubRepository.findAndCount({
       skip: options?.skip,
       take: options?.take,
+      where: options?.country_code
+        ? { country_code: options.country_code }
+        : {},
     });
 
     return { data, total };
@@ -54,7 +56,10 @@ export class ClubService {
         `Le club "${createClubDto.name}" existe déjà en ${createClubDto.country}.`,
       );
     }
-    const newClub = this.clubRepository.create(createClubDto);
+    const newClub = this.clubRepository.create({
+      ...createClubDto,
+      country_code: getCountryCode(createClubDto.country),
+    });
     return await this.clubRepository.save(newClub);
   }
 
@@ -90,6 +95,8 @@ export class ClubService {
       }
     }
 
+    // TODO: quand on modifie le pays, modifier le code pays automatiquement
+
     const updatedClub = this.clubRepository.merge(club, updateClubDto);
     return await this.clubRepository.save(updatedClub);
   }
@@ -109,4 +116,9 @@ export class ClubService {
     const club = await this.findOne(id);
     return await this.clubRepository.remove(club);
   }
+}
+
+// TODO: utiliser une vraie bibliothèque pour ça
+function getCountryCode(country: string): string {
+  return country.slice(0, 2).toLowerCase();
 }

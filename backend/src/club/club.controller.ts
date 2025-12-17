@@ -33,10 +33,12 @@ export class ClubController {
   async findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
+    @Query('country_code') country_code: string,
   ): Promise<PaginatedClubResponseDto> {
     const { data, total } = await this.clubService.findAll({
       skip: (page - 1) * limit,
       take: limit,
+      country_code,
     });
 
     return {
@@ -45,16 +47,6 @@ export class ClubController {
       }),
       total,
     };
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get one club' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Returns one club',
-  })
-  async findOne(@Param('id') id: string): Promise<ClubResponseDto> {
-    return await this.clubService.findOne(id);
   }
 
   @Get('country')
@@ -66,6 +58,16 @@ export class ClubController {
   async findAllCountry(): Promise<{ country: string[] }> {
     const country = await this.clubService.findAllCountry();
     return { country };
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get one club' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns one club',
+  })
+  async findOne(@Param('id') id: string): Promise<ClubResponseDto> {
+    return await this.clubService.findOne(id);
   }
 
   @Post()

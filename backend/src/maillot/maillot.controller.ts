@@ -21,9 +21,9 @@ export class MaillotController {
   async findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
-    @Query('clubId') clubId,
-    @Query('saisonId') saisonId,
-    @Query('marque') marque,
+    @Query('clubId') clubId: string,
+    @Query('saisonId') saisonId: string,
+    @Query('marque') marque: string,
   ): Promise<PaginatedMaillotResponseDto> {
     const { data, total } = await this.maillotService.findAll({
       skip: (page - 1) * limit,

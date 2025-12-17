@@ -8,7 +8,7 @@ CREATE DATABASE "maillotariumdb";
 INSERT INTO saison ("anneeDebut", "anneeFin") VALUES (2025, 2026);
 
 -- Créer un club
-INSERT INTO club (name, country) VALUES ('Arsenal', 'Angleterre');
+INSERT INTO club (name, country, country_code) VALUES ('Arsenal', 'Angleterre', 'en');
 
 -- Créer un maillot
 -- Ajouter le maillot dans le s3 manuellement

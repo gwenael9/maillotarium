@@ -32,6 +32,15 @@ export class ClubResponseDto {
   @Expose()
   @Type(() => String)
   @ApiProperty({
+    description: 'code pays du club',
+    example: 'fr',
+    type: String,
+  })
+  country_code: string;
+
+  @Expose()
+  @Type(() => String)
+  @ApiProperty({
     description: 'logo du club',
     type: String,
   })

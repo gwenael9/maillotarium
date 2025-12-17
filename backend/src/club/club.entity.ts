@@ -12,6 +12,9 @@ export class ClubEntity {
   @Column({ nullable: true })
   country: string;
 
+  @Column({ nullable: true })
+  country_code: string;
+
   @OneToMany(() => MaillotEntity, (maillot) => maillot.club)
   maillots: MaillotEntity[];
 
