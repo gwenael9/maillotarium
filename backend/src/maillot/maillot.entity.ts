@@ -1,9 +1,12 @@
 import { ClubEntity } from '@/club/club.entity';
 import { SaisonEntity } from '@/saison/saison.entity';
+import { TagEntity } from '@/tag/tag.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -28,7 +31,7 @@ export class MaillotEntity {
   @JoinColumn({ name: 'clubId' })
   club?: ClubEntity;
 
-  @Column({ nullable: true })
+  @Column()
   clubId: string;
 
   @ManyToOne(() => SaisonEntity, (saison) => saison.maillots, {
@@ -38,7 +41,7 @@ export class MaillotEntity {
   @JoinColumn({ name: 'saisonId' })
   saison?: SaisonEntity;
 
-  @Column({ nullable: true })
+  @Column()
   saisonId: string;
 
   @Column({
@@ -59,4 +62,14 @@ export class MaillotEntity {
 
   @Column({ type: 'jsonb', nullable: true })
   palette_couleur?: string[];
+
+  @ManyToMany(() => TagEntity, (tag) => tag.maillots, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: 'maillot_tags',
+    joinColumn: { name: 'maillotId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'tagId', referencedColumnName: 'id' },
+  })
+  tags: TagEntity[];
 }

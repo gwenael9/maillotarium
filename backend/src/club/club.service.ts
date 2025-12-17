@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -8,8 +7,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Not, Repository } from 'typeorm';
 import { ClubEntity } from './club.entity';
 import { ClubCreateDto } from './dtos/club-input.dto';
+import { PaginationResponse } from '@/common/types/pagination';
+import { verifIfHasChanges } from '@/common/services/update';
 
-export interface ClubFIndAllOptions extends FindManyOptions<ClubEntity> {
+interface ClubFIndAllOptions extends FindManyOptions<ClubEntity> {
   country_code?: string;
 }
 
@@ -22,7 +23,7 @@ export class ClubService {
 
   async findAll(
     options?: ClubFIndAllOptions,
-  ): Promise<{ data: ClubEntity[]; total: number }> {
+  ): Promise<PaginationResponse<ClubEntity>> {
     const [data, total] = await this.clubRepository.findAndCount({
       skip: options?.skip,
       take: options?.take,
@@ -69,14 +70,16 @@ export class ClubService {
   ): Promise<ClubEntity> {
     const club = await this.findOne(id);
 
-    const hasChanges = Object.keys(updateClubDto).some(
-      (key) =>
-        updateClubDto[key] !== undefined && updateClubDto[key] !== club[key],
-    );
+    // const hasChanges = Object.keys(updateClubDto).some(
+    //   (key) =>
+    //     updateClubDto[key] !== undefined && updateClubDto[key] !== club[key],
+    // );
 
-    if (!hasChanges) {
-      throw new BadRequestException("Aucune modification n'a été détectée.");
-    }
+    // if (!hasChanges) {
+    //   throw new BadRequestException("Aucune modification n'a été détectée.");
+    // }
+
+    verifIfHasChanges<ClubEntity>(updateClubDto, club);
 
     // on vérifie qu'on modifie pas le club en un club déjà existant
     if (updateClubDto.name || updateClubDto.country) {

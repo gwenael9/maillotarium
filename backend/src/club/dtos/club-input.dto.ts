@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class ClubCreateDto {
@@ -20,3 +20,5 @@ export class ClubCreateDto {
   @IsNotEmpty()
   country: string;
 }
+
+export class ClubUpdateDto extends PartialType(ClubCreateDto) {}

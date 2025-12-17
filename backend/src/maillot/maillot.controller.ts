@@ -24,6 +24,7 @@ export class MaillotController {
     @Query('clubId') clubId: string,
     @Query('saisonId') saisonId: string,
     @Query('marque') marque: string,
+    @Query('resolve') resolve: boolean,
   ): Promise<PaginatedMaillotResponseDto> {
     const { data, total } = await this.maillotService.findAll({
       skip: (page - 1) * limit,
@@ -31,6 +32,7 @@ export class MaillotController {
       clubId,
       saisonId,
       marque,
+      resolve,
     });
 
     return {

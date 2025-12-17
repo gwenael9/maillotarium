@@ -74,7 +74,7 @@ export class ClubController {
   @ApiOperation({ summary: 'Create a new club' })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: 'The club has been successfully created.',
+    description: 'Le club X a bien été créé.',
     type: ClubResponseDto,
   })
   async create(@Body() createClubDto: ClubCreateDto): Promise<MessageResponse> {

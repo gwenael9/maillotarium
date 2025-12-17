@@ -2,11 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { MaillotEntity } from './maillot.entity';
+import { PaginationResponse } from '@/common/types/pagination';
 
 export interface MaillotFindAllOptions extends FindManyOptions<MaillotEntity> {
   clubId?: string;
   saisonId?: string;
   marque?: string;
+  resolve?: boolean;
 }
 
 @Injectable()
@@ -18,7 +20,7 @@ export class MaillotService {
 
   async findAll(
     options?: MaillotFindAllOptions,
-  ): Promise<{ data: MaillotEntity[]; total: number }> {
+  ): Promise<PaginationResponse<MaillotEntity>> {
     const [data, total] = await this.maillotRepository.findAndCount({
       where: {
         clubId: options?.clubId,
@@ -27,6 +29,7 @@ export class MaillotService {
       },
       skip: options?.skip,
       take: options?.take,
+      relations: options?.resolve ? ['club', 'saison', 'tags'] : [],
     });
 
     return { data, total };
