@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { MaillotEntity } from './maillot.entity';
 import { PaginationResponse } from '@/common/types/pagination';
+import { CreateMaillotDto } from './dtos/maillot-input.dto';
+import { TagEntity } from '@/tag/tag.entity';
 
 export interface MaillotFindAllOptions extends FindManyOptions<MaillotEntity> {
   clubId?: string;
@@ -35,12 +37,24 @@ export class MaillotService {
     return { data, total };
   }
 
-  async findOne(id: string): Promise<MaillotEntity> {
+  async findOne(id: string, withRelations: boolean): Promise<MaillotEntity> {
     const maillot = await this.maillotRepository.findOne({
       where: { id },
+      relations: withRelations ? ['club', 'saison', 'tags'] : [],
     });
 
     if (!maillot) throw new NotFoundException('Maillot inconnu');
     return maillot;
   }
+
+  async create(createMaillotDto: CreateMaillotDto): Promise<void> {
+    const newMaillot = this.maillotRepository.create({
+      ...createMaillotDto,
+      tags: createMaillotDto.tagIds?.map((id) => ({ id }) as TagEntity),
+    });
+
+    await this.maillotRepository.save(newMaillot);
+  }
+
+  // TODO: Ajouter une méthode pour mettre à jour les tags d'un maillot (ou une méthode générique de mise à jour)
 }

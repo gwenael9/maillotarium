@@ -5,12 +5,12 @@ import { SaisonEntity } from '../saison.entity';
 @Exclude()
 export class SaisonResponseDto {
   @Expose()
-  @Type(() => Number)
+  @Type(() => String)
   @ApiProperty({
     description: 'id de la saison',
-    type: Number,
+    type: String,
   })
-  id: number;
+  id: string;
 
   @Expose()
   @ApiProperty({

@@ -1,4 +1,12 @@
-import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -6,6 +14,8 @@ import {
   PaginatedMaillotResponseDto,
 } from './dtos/maillot-response.dto';
 import { MaillotService } from './maillot.service';
+import { MessageResponse } from '@/common/types/message';
+import { CreateMaillotDto } from './dtos/maillot-input.dto';
 
 @Controller('maillot')
 export class MaillotController {
@@ -52,5 +62,37 @@ export class MaillotController {
     return plainToInstance(MaillotResponseDto, data, {
       excludeExtraneousValues: true,
     });
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get one maillot' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns one maillot',
+  })
+  async findOne(
+    @Param('id') id: string,
+    @Query('resolve') resolve: boolean,
+  ): Promise<MaillotResponseDto> {
+    const maillot = await this.maillotService.findOne(id, resolve);
+    return plainToInstance(MaillotResponseDto, maillot, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create a maillot' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Le maillot a bien été ajouté.',
+    type: MaillotResponseDto,
+  })
+  async create(
+    @Body() createMaillotDto: CreateMaillotDto,
+  ): Promise<MessageResponse> {
+    await this.maillotService.create(createMaillotDto);
+    return {
+      message: `Le maillot a bien été ajouté.`,
+    };
   }
 }

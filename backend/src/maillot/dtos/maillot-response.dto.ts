@@ -74,15 +74,15 @@ export class MaillotResponseDto {
 
   @Expose()
   @Type(() => ClubResponseDto)
-  club: ClubResponseDto;
+  club?: ClubResponseDto;
 
   @Expose()
   @Type(() => TagResponseDto)
-  tags: TagResponseDto[];
+  tags?: TagResponseDto[];
 
   @Expose()
   @Type(() => SaisonResponseDto)
-  saison: SaisonResponseDto;
+  saison?: SaisonResponseDto;
 }
 
 export class PaginatedMaillotResponseDto {
