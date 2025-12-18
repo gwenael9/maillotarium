@@ -47,7 +47,9 @@ export class MaillotService {
     return maillot;
   }
 
+  // TODO: gérer le stockage de l'image du maillot (stocker dans le s3 puis récupérer l'url et la stocker en base)
   async create(createMaillotDto: CreateMaillotDto): Promise<void> {
+    // TODO: pour le champ palette, service qui récupère les couleurs dominantes de l'image? puis stocke en RVB ou HEX en base
     const newMaillot = this.maillotRepository.create({
       ...createMaillotDto,
       tags: createMaillotDto.tagIds?.map((id) => ({ id }) as TagEntity),
