@@ -10,11 +10,11 @@ import {
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import {
+  MaillotImageUploadResponseDto,
   MaillotResponseDto,
   PaginatedMaillotResponseDto,
 } from './dtos/maillot-response.dto';
 import { MaillotService } from './maillot.service';
-import { MessageResponse } from '@/common/types/message';
 import { CreateMaillotDto } from './dtos/maillot-input.dto';
 
 @Controller('maillot')
@@ -85,14 +85,15 @@ export class MaillotController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Le maillot a bien été ajouté.',
-    type: MaillotResponseDto,
+    type: MaillotImageUploadResponseDto,
   })
   async create(
     @Body() createMaillotDto: CreateMaillotDto,
-  ): Promise<MessageResponse> {
-    await this.maillotService.create(createMaillotDto);
+  ): Promise<MaillotImageUploadResponseDto> {
+    const { uploadUrl } = await this.maillotService.create(createMaillotDto);
     return {
       message: `Le maillot a bien été ajouté.`,
+      uploadUrl,
     };
   }
 }

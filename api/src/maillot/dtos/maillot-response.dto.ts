@@ -92,3 +92,17 @@ export class PaginatedMaillotResponseDto {
   @ApiProperty()
   total: number;
 }
+
+export class MaillotImageUploadResponseDto {
+  @ApiProperty({
+    description: "L'URL présignée pour téléverser l'image du maillot",
+    type: String,
+  })
+  uploadUrl: string;
+
+  @ApiProperty({
+    description: 'Message de confirmation',
+    type: String,
+  })
+  message: string;
+}

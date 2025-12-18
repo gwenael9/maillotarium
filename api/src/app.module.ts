@@ -5,6 +5,7 @@ import { ClubModule } from './club/club.module';
 import { MaillotModule } from './maillot/maillot.module';
 import { SaisonModule } from './saison/saison.module';
 import { TagModule } from './tag/tag.module';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TagModule } from './tag/tag.module';
     SaisonModule,
     MaillotModule,
     TagModule,
+    S3Module,
   ],
 })
 export class AppModule {}

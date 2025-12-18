@@ -12,9 +12,6 @@ export class CreateMaillotDto {
   type_maillot: TypeMaillot;
 
   @IsString()
-  image_url: string;
-
-  @IsString()
   @IsOptional()
   description?: string;
 
