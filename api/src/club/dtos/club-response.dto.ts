@@ -1,3 +1,4 @@
+import { MaillotResponseDto } from '@/maillot/dtos/maillot-response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 
@@ -45,6 +46,10 @@ export class ClubResponseDto {
     type: String,
   })
   logo_url: string;
+
+  @Expose()
+  @Type(() => MaillotResponseDto)
+  maillots?: MaillotResponseDto[];
 }
 
 export class PaginatedClubResponseDto {

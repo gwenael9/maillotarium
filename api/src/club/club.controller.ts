@@ -16,7 +16,7 @@ import {
   ClubResponseDto,
   PaginatedClubResponseDto,
 } from './dtos/club-response.dto';
-import { ClubCreateDto } from './dtos/club-input.dto';
+import { ClubCreateDto, ClubUpdateDto } from './dtos/club-input.dto';
 import { MessageResponse } from '@/common/types/message';
 
 @Controller('club')
@@ -34,11 +34,13 @@ export class ClubController {
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('country_code') country_code: string,
+    @Query('resolve') resolve: boolean,
   ): Promise<PaginatedClubResponseDto> {
     const { data, total } = await this.clubService.findAll({
       skip: (page - 1) * limit,
       take: limit,
       country_code,
+      resolve,
     });
 
     return {
@@ -66,8 +68,14 @@ export class ClubController {
     status: HttpStatus.OK,
     description: 'Returns one club',
   })
-  async findOne(@Param('id') id: string): Promise<ClubResponseDto> {
-    return await this.clubService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+    @Query('resolve') resolve: boolean,
+  ): Promise<ClubResponseDto> {
+    const club = await this.clubService.findOne(id, resolve);
+    return plainToInstance(ClubResponseDto, club, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Post()
@@ -90,7 +98,7 @@ export class ClubController {
   })
   async update(
     @Param('id') id: string,
-    @Body() updateClubDto: Partial<ClubCreateDto>,
+    @Body() updateClubDto: ClubUpdateDto,
   ): Promise<ClubResponseDto> {
     const updatedClub = await this.clubService.update(id, updateClubDto);
     return plainToInstance(ClubResponseDto, updatedClub, {

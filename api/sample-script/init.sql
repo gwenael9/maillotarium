@@ -14,7 +14,6 @@ INSERT INTO club (name, country, country_code) VALUES ('Arsenal', 'Angleterre', 
 INSERT INTO tag (name) VALUES ('Vintage'), ('Authentique'), ('Edition Limitée');
 
 -- Créer un maillot
--- Ajouter le maillot dans le s3 manuellement
 WITH nouveau_maillot AS (
   INSERT INTO maillot ("clubId", "saisonId", type_maillot, image_url, marque, palette_couleur)
   VALUES (
