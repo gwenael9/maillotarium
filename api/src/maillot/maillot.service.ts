@@ -44,7 +44,7 @@ export class MaillotService extends BaseService<MaillotEntity> {
     return super.findAll({ ...findOptions, where });
   }
 
-  async create(
+  async createMaillot(
     createMaillotDto: CreateMaillotDto,
   ): Promise<{ uploadUrl: string }> {
     const club = await this.clubService.findOne(createMaillotDto.clubId);

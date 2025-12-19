@@ -7,6 +7,7 @@ import {
   DeepPartial,
   FindManyOptions,
   FindOptionsWhere,
+  ILike,
   Not,
   Repository,
 } from 'typeorm';
@@ -40,6 +41,12 @@ export abstract class BaseService<T> {
     });
     if (!object) throw new NotFoundException(`${this.entityName} inconnu(e)`);
     return object;
+  }
+
+  async create(createDto: Partial<T>): Promise<T> {
+    await this.checkUniqueness(null, createDto);
+    const object = this.repository.create(createDto as DeepPartial<T>);
+    return await this.repository.save(object);
   }
 
   async update(id: string, updateDto: Partial<T>): Promise<T> {
@@ -76,9 +83,9 @@ export abstract class BaseService<T> {
   }
 
   protected async checkUniqueness(
-    id: string,
+    id: string | null,
     dto: Partial<T>,
-    object: T,
+    object?: T,
   ): Promise<void> {
     const where = {} as FindOptionsWhere<T>;
 
@@ -87,11 +94,13 @@ export abstract class BaseService<T> {
       const value = dto[field] !== undefined ? dto[field] : object?.[field];
 
       if (value !== undefined && value !== null) {
-        where[field] = value as FindOptionsWhere<T>[keyof T];
+        where[field] = ILike(value) as FindOptionsWhere<T>[keyof T];
       }
     }
 
-    where[this.key] = Not(id) as FindOptionsWhere<T>[keyof T];
+    if (id) {
+      where[this.key] = Not(id) as FindOptionsWhere<T>[keyof T];
+    }
 
     // on cherche un objet identique mais pas avec le même id
     const exists = await this.repository.findOne({ where });
@@ -99,7 +108,7 @@ export abstract class BaseService<T> {
     if (exists) {
       const fieldsList = this.uniqueFields.map(String).join(' + ');
       throw new ConflictException(
-        `${this.entityName} avec cette combinaison (${fieldsList}) existe déjà.`,
+        `Un(e) ${this.entityName.toLowerCase()} avec cette combinaison (${fieldsList}) existe déjà.`,
       );
     }
   }

@@ -1,10 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { ClubEntity } from './club.entity';
-import { ClubCreateDto } from './dtos/club-input.dto';
+import { ClubCreateDto, ClubUpdateDto } from './dtos/club-input.dto';
 import { PaginationResponse } from '@/common/types/pagination';
 import { allOptions, BaseService } from '@/common/services/base.service';
+import { getCountryCode } from '@/common/utils/getCountryCode';
 
 interface ClubFindAllOptions extends allOptions<ClubEntity> {
   country_code?: string;
@@ -33,26 +34,24 @@ export class ClubService extends BaseService<ClubEntity> {
   }
 
   async create(createClubDto: ClubCreateDto): Promise<ClubEntity> {
-    const existingClub = await this.clubRepository.findOne({
-      where: {
-        name: createClubDto.name,
-        country: createClubDto.country,
-      },
-    });
-
-    if (existingClub) {
-      throw new ConflictException(
-        `Le club "${createClubDto.name}" existe déjà en ${createClubDto.country}.`,
-      );
-    }
-    const newClub = this.clubRepository.create({
+    const clubData: Partial<ClubEntity> = {
       ...createClubDto,
       country_code: getCountryCode(createClubDto.country),
-    });
-    return await this.clubRepository.save(newClub);
+    };
+
+    return super.create(clubData);
   }
 
-  // TODO: quand on modifie le pays, modifier le code pays automatiquement
+  async update(id: string, updateDto: ClubUpdateDto): Promise<ClubEntity> {
+    const clubData: Partial<ClubEntity> = { ...updateDto };
+
+    // si le pays change, on recalcule le code
+    if (updateDto.country) {
+      clubData.country_code = getCountryCode(updateDto.country);
+    }
+
+    return super.update(id, clubData);
+  }
 
   async findAllCountry(): Promise<string[]> {
     const result: ClubEntity[] = await this.clubRepository
@@ -64,9 +63,4 @@ export class ClubService extends BaseService<ClubEntity> {
       .map((row) => row.country.trim().toLowerCase())
       .filter((c) => c.length > 0);
   }
-}
-
-// TODO: utiliser une vraie bibliothèque pour ça
-function getCountryCode(country: string): string {
-  return country.slice(0, 2).toLowerCase();
 }

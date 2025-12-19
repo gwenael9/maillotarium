@@ -1,5 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateTagDto } from './dtos/tag-input.dto';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagEntity } from './tag.entity';
 import { Repository } from 'typeorm';
@@ -12,16 +11,5 @@ export class TagService extends BaseService<TagEntity> {
     private readonly tagRepository: Repository<TagEntity>,
   ) {
     super(tagRepository, 'Tag', 'id', [], ['name']);
-  }
-
-  async create(createTagDto: CreateTagDto): Promise<TagEntity> {
-    const existingTag = await this.tagRepository.findOne({
-      where: { name: createTagDto.name },
-    });
-    if (existingTag) {
-      throw new ConflictException(`Le tag "${createTagDto.name}" existe déjà.`);
-    }
-    const tag = this.tagRepository.create(createTagDto);
-    return await this.tagRepository.save(tag);
   }
 }

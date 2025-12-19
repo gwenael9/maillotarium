@@ -90,7 +90,8 @@ export class MaillotController {
   async create(
     @Body() createMaillotDto: CreateMaillotDto,
   ): Promise<MaillotImageUploadResponseDto> {
-    const { uploadUrl } = await this.maillotService.create(createMaillotDto);
+    const { uploadUrl } =
+      await this.maillotService.createMaillot(createMaillotDto);
     return {
       message: `Le maillot a bien été ajouté.`,
       uploadUrl,
