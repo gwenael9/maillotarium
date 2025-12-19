@@ -1,3 +1,4 @@
+import { Public } from '@/common/decorators/public.decorator';
 import {
   Body,
   Controller,
@@ -9,18 +10,19 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
+import { CreateMaillotDto } from './dtos/maillot-input.dto';
 import {
   MaillotImageUploadResponseDto,
   MaillotResponseDto,
   PaginatedMaillotResponseDto,
 } from './dtos/maillot-response.dto';
 import { MaillotService } from './maillot.service';
-import { CreateMaillotDto } from './dtos/maillot-input.dto';
 
 @Controller('maillot')
 export class MaillotController {
   constructor(private readonly maillotService: MaillotService) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all maillots' })
   @ApiResponse({
@@ -53,6 +55,7 @@ export class MaillotController {
     };
   }
 
+  @Public()
   @Get('club/:clubId/saison/:saisonId')
   async findThreeBySaisonAndClub(
     @Param('clubId') clubId: string,
@@ -64,6 +67,7 @@ export class MaillotController {
     });
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get one maillot' })
   @ApiResponse({

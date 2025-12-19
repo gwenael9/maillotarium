@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import { ClubModule } from './club/club.module';
+import { JwtAuthGuard } from './common/guards/auth.guard';
 import { MaillotModule } from './maillot/maillot.module';
+import { S3Module } from './s3/s3.module';
 import { SaisonModule } from './saison/saison.module';
 import { TagModule } from './tag/tag.module';
-import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -25,6 +28,13 @@ import { S3Module } from './s3/s3.module';
     MaillotModule,
     TagModule,
     S3Module,
+    AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}

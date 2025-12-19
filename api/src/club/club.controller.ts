@@ -1,3 +1,5 @@
+import { Public } from '@/common/decorators/public.decorator';
+import { MessageResponse } from '@/common/types/message';
 import {
   Body,
   Controller,
@@ -12,17 +14,17 @@ import {
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { ClubService } from './club.service';
+import { ClubCreateDto, ClubUpdateDto } from './dtos/club-input.dto';
 import {
   ClubResponseDto,
   PaginatedClubResponseDto,
 } from './dtos/club-response.dto';
-import { ClubCreateDto, ClubUpdateDto } from './dtos/club-input.dto';
-import { MessageResponse } from '@/common/types/message';
 
 @Controller('club')
 export class ClubController {
   constructor(private readonly clubService: ClubService) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all clubs' })
   @ApiResponse({
@@ -51,6 +53,7 @@ export class ClubController {
     };
   }
 
+  @Public()
   @Get('country')
   @ApiOperation({ summary: 'Get all country' })
   @ApiResponse({
@@ -62,6 +65,7 @@ export class ClubController {
     return { country };
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get one club' })
   @ApiResponse({

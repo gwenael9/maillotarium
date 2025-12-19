@@ -1,28 +1,30 @@
+import { Public } from '@/common/decorators/public.decorator';
+import { MessageResponse } from '@/common/types/message';
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpStatus,
-  Query,
+  Param,
   Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { TagService } from './tag.service';
-import { CreateTagDto, TagUpdateDto } from './dtos/tag-input.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { plainToInstance } from 'class-transformer';
+import { CreateTagDto, TagUpdateDto } from './dtos/tag-input.dto';
 import {
   PaginatedTagResponseDto,
   TagResponseDto,
 } from './dtos/tag-response.dto';
-import { plainToInstance } from 'class-transformer';
-import { MessageResponse } from '@/common/types/message';
+import { TagService } from './tag.service';
 
 @Controller('tag')
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all tags' })
   @ApiResponse({
@@ -47,6 +49,7 @@ export class TagController {
     };
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get one tag' })
   @ApiResponse({
