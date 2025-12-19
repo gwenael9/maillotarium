@@ -8,7 +8,13 @@ CREATE DATABASE "maillotariumdb";
 INSERT INTO saison ("anneeDebut", "anneeFin") VALUES (2025, 2026);
 
 -- Créer un club
-INSERT INTO club (name, country, country_code) VALUES ('Arsenal', 'Angleterre', 'GB-ENG');
+INSERT INTO club (name, country, country_code) VALUES 
+('Arsenal', 'Angleterre', 'GB-ENG'), 
+('FC Barcelone', 'Espagne', 'ES'), 
+('Bayern Munich', 'Allemagne', 'DE'), 
+('Juventus', 'Italie', 'IT'), 
+('Paris Saint-Germain', 'France', 'FR'), 
+('Ajax Amsterdam', 'Pays-Bas', 'NL');
 
 -- Créer des tags
 INSERT INTO tag (name) VALUES ('Vintage'), ('Authentique'), ('Edition Limitée');

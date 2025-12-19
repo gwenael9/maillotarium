@@ -10,6 +10,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -21,6 +23,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
   minio:
     image: minio/minio
@@ -71,3 +75,5 @@ services:
 
 volumes:
   minio_data:
+  postgres_data:
+  pgadmin_data:
